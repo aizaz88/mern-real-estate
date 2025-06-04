@@ -69,7 +69,7 @@ function SignUp() {
           disabled={isLoading}
           className="bg-slate-700 text-center text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
-          {isLoading ? "Loading..." : "Sign up"}
+          {isLoading ? "Loading..." : "Sign Up"}
         </button>
       </form>
       <div className="flex gap-2 mt-5">
