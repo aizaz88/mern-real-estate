@@ -1,19 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-<<<<<<< HEAD
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 
 const app = express();
 app.use(express.json());
-=======
-import userRouter from "./routes/user.router.js";
-const app = express();
->>>>>>> e3caff93a8fc1bfdad0800c7dd9e0a1046cdf88a
+dotenv.config();
 //////////////////
 //Mongo connect -----
-dotenv.config();
+
 mongoose
   .connect(process.env.MONGO)
   .then(() => console.log("Connected to MongoDB"))
@@ -21,11 +17,17 @@ mongoose
 //////////////////////////////////////////
 
 app.use("/api/user", userRouter);
-<<<<<<< HEAD
 app.use("/api/auth", authRouter);
-=======
->>>>>>> e3caff93a8fc1bfdad0800c7dd9e0a1046cdf88a
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
 //////////////////////////
 app.listen(5000, () => {
   console.log("server is listening on port 5000!!");
