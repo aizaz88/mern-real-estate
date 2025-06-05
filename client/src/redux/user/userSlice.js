@@ -28,7 +28,6 @@ const userSlice = createSlice({
     // Profile Update
     updateUserStart: (state) => {
       state.loading = true;
-      state.error = null;
     },
     updateUserSuccess: (state, action) => {
       state.currentUser = action.payload;
@@ -36,8 +35,8 @@ const userSlice = createSlice({
       state.error = null;
     },
     updateUserFailure: (state, action) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     },
   },
 });

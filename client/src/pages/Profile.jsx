@@ -8,14 +8,12 @@ import {
 } from "../redux/user/userSlice";
 
 export default function Profile() {
-  /* ─────────────────────────── STATE / REDUX ─────────────────────────── */
   const { currentUser, loading, error } = useSelector((s) => s.user);
   const dispatch = useDispatch();
 
   const fileRef = useRef();
-
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0); // 0‒100
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -23,18 +21,16 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
+    password: "",
     avatar: currentUser.avatar,
   });
 
-  /* ─────────────────────────── WATCH FILE ────────────────────────────── */
   useEffect(() => {
     if (file) uploadImage(file);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
-  /* ─────────────────────────── UPLOAD TO CLOUDINARY ──────────────────── */
   const uploadImage = async (selectedFile) => {
-    // reset UI flags
     setUploadProgress(0);
     setUploadComplete(false);
     setFileUploadError(false);
@@ -68,7 +64,6 @@ export default function Profile() {
     }
   };
 
-  /* ─────────────────────────── FORM HANDLERS ─────────────────────────── */
   const handleChange = (e) =>
     setFormData((p) => ({ ...p, [e.target.id]: e.target.value }));
 
@@ -76,17 +71,21 @@ export default function Profile() {
     e.preventDefault();
     setUpdateSuccess(false);
     dispatch(updateUserStart());
+
     try {
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PUT",
+        method: "POST", // or "PUT" – just match your backend
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
+
       if (data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
       }
+
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (err) {
@@ -94,7 +93,6 @@ export default function Profile() {
     }
   };
 
-  /* ─────────────────────────── UI ────────────────────────────────────── */
   return (
     <div className="max-w-lg mx-auto p-4">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -115,7 +113,6 @@ export default function Profile() {
           className="h-24 w-24 rounded-full object-cover cursor-pointer self-center"
         />
 
-        {/* Progress / Success / Error */}
         <div className="text-center text-sm">
           {uploadProgress > 0 && uploadProgress < 100 && (
             <span className="text-blue-600">Uploading… {uploadProgress}%</span>
@@ -148,6 +145,7 @@ export default function Profile() {
           id="password"
           type="password"
           placeholder="New password"
+          value={formData.password}
           onChange={handleChange}
           className="border p-3 rounded-lg"
         />
@@ -156,15 +154,20 @@ export default function Profile() {
           disabled={loading}
           className="bg-blue-700 text-white rounded-lg p-3 uppercase hover:opacity-90"
         >
-          {loading ? "Updating…" : "Update"}
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
-
-      {/* Global messages */}
+      <div className="flex justify-between mt-5">
+        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <span className="text-red-700 cursor-pointer">Sign out</span>
+      </div>
       <div className="mt-4">
         {error && <p className="text-red-500 text-sm">{error}</p>}
         {updateSuccess && (
-          <p className="text-green-500 text-sm">Profile updated!</p>
+          <p className="text-green-500 text-sm">
+            {" "}
+            Profile updated successfully ! ✅
+          </p>
         )}
       </div>
     </div>
