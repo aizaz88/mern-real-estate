@@ -27,12 +27,10 @@ function OAuth() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Something went wrong");
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
       console.log("OAuth error ocuur", error);
-      alert("Google sign-in failed. Try again.");
     }
   };
   return (
