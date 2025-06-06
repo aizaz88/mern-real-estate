@@ -3,20 +3,29 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
-//SIGNUP
+/////////////////////////////////////////SIGNUP
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-  const hashPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashPassword });
   try {
+    const { username, email, password } = req.body;
+
+    // Basic validation:  make sure all fields exist
+    if (!username || !email || !password) {
+      return next(errorHandler(400, "All fields are required"));
+    }
+
+    const hashPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({ username, email, password: hashPassword });
+
     await newUser.save();
-    res.status(200).json("user crreated successfully !");
+    res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     next(error);
   }
 };
 
-////SIGNIN
+/////////////////////////SIGNIN
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
@@ -36,6 +45,7 @@ export const signin = async (req, res, next) => {
   }
 };
 
+//////////////GOOGLE AUTH////////////////
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });

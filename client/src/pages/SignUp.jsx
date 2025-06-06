@@ -10,15 +10,18 @@ function SignUp() {
 
   ////////////////////////////////////////////////
   const handleChange = (e) => {
-    e.preventDefault();
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   //////////////////////////////////////
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsLoading(true);
+      console.log("Sending data:", formData); // Add this for debugging
+
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -26,20 +29,21 @@ function SignUp() {
         },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
-      if (data.success == false) {
+
+      if (data.success === false) {
         setError(data.message);
-        setIsLoading(false);
-        return;
+      } else {
+        navigate("/sign-in");
       }
+    } catch (err) {
+      setError(err.message);
+    } finally {
       setIsLoading(false);
-      setError(null);
-      navigate("/sign-in");
-    } catch (error) {
-      setIsLoading(false);
-      setError(error.message);
     }
   };
+
   /////////////////////////////////////
   return (
     <div className="p-3 max-w-lg mx-auto ">
