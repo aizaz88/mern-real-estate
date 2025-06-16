@@ -38,7 +38,7 @@ const listingSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    tyoe: {
+    type: {
       type: String,
       required: true,
     },
