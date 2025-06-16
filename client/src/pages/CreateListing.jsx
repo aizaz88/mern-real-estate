@@ -371,9 +371,9 @@ export default function CreateListing() {
           <button
             disabled={loading || uploading}
             type="submit"
-            className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95"
+            className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-70"
           >
-            {loading ? "Creating" : "Create Listing"}
+            {loading ? "Creating..." : "Create Listing"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>
