@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useSelector } from "react-redux";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
@@ -14,10 +15,14 @@ import {
 
 function Listing() {
   SwiperCore.use([Navigation]);
+  const { currentUser } = useSelector((state) => state.user);
   const params = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const [showForm, setShowForm] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -44,7 +49,7 @@ function Listing() {
   }, [params.listingId]);
 
   return (
-    <div className="">
+    <div>
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
       {error && (
         <p className="text-red-500 text-center my-7 text-2xl">
@@ -70,7 +75,7 @@ function Listing() {
 
           <div className="max-w-4xl mx-auto px-4 py-6">
             <h1 className="text-3xl font-semibold text-black mb-2">
-              {listing.name} - $ {listing.regularPrice.toLocaleString("en-US")}
+              {listing.name} - ${listing.regularPrice.toLocaleString("en-US")}
             </h1>
 
             <p className="flex items-center mt-2 gap-2 text-slate-600 text-sm">
@@ -80,13 +85,10 @@ function Listing() {
               </span>
             </p>
 
-            <div className="flex items-center gap-4 my-4">
-              {/* For Sale / For Rent pill */}
+            <div className="flex items-center gap-4 my-4 flex-wrap">
               <p className="bg-red-900 w-fit px-3 py-1 text-white text-sm rounded-md text-center">
                 {listing.type === "rent" ? "For Rent" : "For Sale"}
               </p>
-
-              {/* ✅ Show discounted price if offer is true */}
               {listing.offer && (
                 <p className="bg-green-900 w-fit px-3 py-1 text-white text-sm rounded-md text-center">
                   ${listing.discountPrice.toLocaleString("en-US")} discount
@@ -94,7 +96,7 @@ function Listing() {
               )}
             </div>
 
-            <div className="mt-6 text-gray-700">
+            <div className="mt-6 text-gray-700 flex-1 break-words">
               <p>
                 <span className="font-semibold text-black">Description - </span>
                 {listing.description}
@@ -115,6 +117,51 @@ function Listing() {
                 <FaChair /> {listing.furnished ? "Furnished" : "Not furnished"}
               </li>
             </ul>
+
+            {currentUser && listing.userRef !== currentUser._id && (
+              <div className="mt-8 flex flex-col items-center sm:items-start">
+                {!showForm ? (
+                  <button
+                    className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 px-5 py-3 transition"
+                    onClick={() => setShowForm(true)}
+                  >
+                    Contact Landlord
+                  </button>
+                ) : (
+                  <div className="w-full max-w-md">
+                    <p className="mb-2 font-semibold text-sm sm:text-base">
+                      Contact{" "}
+                      <span className="text-green-700">
+                        {listing.username || "Owner"}
+                      </span>{" "}
+                      about{" "}
+                      <span className="text-slate-800">{listing.name}</span>
+                    </p>
+
+                    <textarea
+                      rows="4"
+                      placeholder="Write your message here..."
+                      className="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-slate-700 resize-none"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    ></textarea>
+
+                    <a
+                      href={`mailto:${listing.ownerEmail}?subject=Regarding ${
+                        listing.name
+                      }&body=${encodeURIComponent(message)}`}
+                      className={`bg-green-700 text-white rounded-lg uppercase hover:opacity-90 px-5 py-2 w-full transition text-center block ${
+                        message.trim() === ""
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }`}
+                    >
+                      Send Email
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

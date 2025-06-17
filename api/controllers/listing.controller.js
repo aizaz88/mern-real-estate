@@ -1,5 +1,6 @@
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utils/error.js";
+import User from "../models/user.model.js";
 export const createListing = async (req, res, next) => {
   try {
     const listing = await Listing.create(req.body);
@@ -55,7 +56,32 @@ export const getListing = async (req, res, next) => {
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));
     }
-    res.status(200).json(listing);
+
+    let ownerEmail = "";
+    let username = "";
+
+    try {
+      const user = await User.findById(listing.userRef).select(
+        "email username"
+      );
+      if (user) {
+        ownerEmail = user.email;
+        username = user.username;
+      }
+    } catch (err) {
+      console.warn(
+        "⚠️ Failed to fetch user info for listing owner:",
+        err.message
+      );
+      // Proceed without crashing — no email will be included
+    }
+
+    // Send extended data
+    res.status(200).json({
+      ...listing._doc, // original listing data
+      ownerEmail,
+      username,
+    });
   } catch (error) {
     next(error);
   }
