@@ -84,11 +84,15 @@ export default function Profile() {
     setUpdateSuccess(false);
     dispatch(updateUserStart());
 
+    // Clone the formData but remove password if it's empty
+    const userDataToSend = { ...formData };
+    if (!userDataToSend.password) delete userDataToSend.password;
+
     try {
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "POST", // or "PUT" – just match your backend
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(userDataToSend),
       });
 
       const data = await res.json();
