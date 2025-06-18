@@ -1,9 +1,29 @@
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const [searchTerm, setSearchTerm] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  //HANDLE SUBMIT SEARCH
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  //USEEFFECT for url searchterm change to search-bar from
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3 ">
@@ -16,13 +36,20 @@ export default function Header() {
         </Link>
 
         {/* Search Bar */}
-        <form className="bg-slate-100 p-3 sm:p-3 rounded-lg flex items-center w-32 sm:w-48 md:w-64 lg:w-80">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-100 p-3 sm:p-3 rounded-lg flex items-center w-32 sm:w-48 md:w-64 lg:w-80"
+        >
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent outline-none text-sm w-24 sm:w-64 text-slate-700"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
           />
-          <FaSearch className="text-slate-600 ml-2" />
+          <button>
+            <FaSearch className="text-slate-600 ml-2" />
+          </button>
         </form>
         <ul className="gap-4 flex">
           <Link to="/">
