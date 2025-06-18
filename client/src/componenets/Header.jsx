@@ -48,7 +48,7 @@ export default function Header() {
             value={searchTerm}
           />
           <button>
-            <FaSearch className="text-slate-600 ml-2" />
+            <FaSearch className="text-slate-600 ml-0.5" />
           </button>
         </form>
         <ul className="gap-4 flex">
