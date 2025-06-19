@@ -30,8 +30,9 @@ export default function Header() {
         {/* Logo */}
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl  flex flex-wrap">
-            <span className="text-slate-500">AU</span>
-            <span className="text-slate-700 ml-1">Estate</span>
+            <span className="text-slate-500">
+              AU<span className="text-slate-700">Estate</span>
+            </span>
           </h1>
         </Link>
 
@@ -71,7 +72,7 @@ export default function Header() {
               />
             ) : (
               <li className=" sm:inline text-slate-700 hover:underline">
-                SignIn
+                Sign In
               </li>
             )}
           </Link>

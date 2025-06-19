@@ -122,7 +122,7 @@ function Home() {
                 show more offers
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
               {offerListings.map((listing) => (
                 <ListingCard listing={listing} key={listing._id} />
               ))}
@@ -142,7 +142,7 @@ function Home() {
                 show more places for rents
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
               {rentListings.map((listing) => (
                 <ListingCard listing={listing} key={listing._id} />
               ))}
@@ -162,7 +162,7 @@ function Home() {
                 show more places for sales
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
               {saleListings.map((listing) => (
                 <ListingCard listing={listing} key={listing._id} />
               ))}
