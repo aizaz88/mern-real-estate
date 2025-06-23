@@ -264,7 +264,11 @@ export default function Profile() {
         </span>
       </div>
       <div className="mt-4">
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm">
+            {typeof error === "string" ? error : error.message}
+          </p>
+        )}
         {updateSuccess && (
           <p className="text-green-500 text-sm">
             {" "}
