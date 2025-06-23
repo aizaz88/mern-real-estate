@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import cors from "cors"; // ✅ Import CORS
+import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/user.route.js";
@@ -13,36 +13,43 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow frontend to access backend (adjust origin as needed)
+// ✅ Use CORS to allow frontend (Vercel) to call backend (Vercel)
 app.use(
   cors({
-    origin: "https://mern-real-estate-frontend-two.vercel.app", // ✅ Frontend URL
-    credentials: true, // ✅ Allow cookies if needed
+    origin: "https://mern-real-estate-frontend-two.vercel.app", // ✅ Your frontend URL on Vercel
+    credentials: true,
   })
 );
 
-// ✅ Parse incoming JSON and cookies
+// ✅ Parse JSON and cookies
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Connect to MongoDB
+// ✅ Connect to MongoDB Atlas
 mongoose
-  .connect(process.env.MONGO)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log("MongoDB connection error:", err));
+  .connect(process.env.MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 15000, // Wait max 15s for DB server
+    connectTimeoutMS: 10000, // Wait max 10s for initial connection
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
+  });
 
-// ✅ Mount API routes
+// ✅ Basic root route to check API is alive
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
+// ✅ All API routes
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/listing", listingRouter);
 
-// ✅ Root route check
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
-// ✅ Global error handler middleware
+// ✅ Global error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -53,7 +60,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start the server
-app.listen(5000, () => {
-  console.log("Server is listening on port 5000!!");
-});
+// ✅ Start the server (local only)
+const PORT = process.env.PORT || 5000;
+
+// 🟢 Only listen if NOT on Vercel serverless (optional safety for deployment)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+export default app; // ✅ For Vercel serverless to handle it
