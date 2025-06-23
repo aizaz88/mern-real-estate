@@ -22,10 +22,22 @@ mongoose
   .catch((err) => console.log(err));
 //////////////////////////////////////////
 
-app.use("/api/user", userRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/upload", uploadRouter);
-app.use("/api/listing", listingRouter);
+app.use(
+  "https://mern-real-estate-backend-nine.vercel.app/api/user",
+  userRouter
+);
+app.use(
+  "https://mern-real-estate-backend-nine.vercel.app/api/auth",
+  authRouter
+);
+app.use(
+  "https://mern-real-estate-backend-nine.vercel.app/api/upload",
+  uploadRouter
+);
+app.use(
+  "https://mern-real-estate-backend-nine.vercel.app/api/listing",
+  listingRouter
+);
 app.get("/", (req, res) => {
   res.send("API is running...");
 });

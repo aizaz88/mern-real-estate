@@ -50,7 +50,7 @@ export default function Profile() {
 
     try {
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dc0wr37lq/image/upload",
+        "https:/https://mern-real-estate-backend-nine.vercel.app/api.cloudinary.com/v1_1/dc0wr37lq/image/upload",
         fd,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -89,11 +89,14 @@ export default function Profile() {
     if (!userDataToSend.password) delete userDataToSend.password;
 
     try {
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userDataToSend),
-      });
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/user/update/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userDataToSend),
+        }
+      );
 
       const data = await res.json();
 
@@ -113,9 +116,12 @@ export default function Profile() {
   const handleDeleteUser = async (e) => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/user/delete/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (data.success == false) {
         dispatch(deleteUserFailure(data.message));
@@ -131,7 +137,9 @@ export default function Profile() {
   const handleSignOutUser = async (req, res, next) => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch("/api/auth/signout");
+      const res = await fetch(
+        "https://mern-real-estate-backend-nine.vercel.app/api/auth/signout"
+      );
       const data = await res.json();
       if (data.success == false) {
         dispatch(signOutUserFailure(data.message));
@@ -148,7 +156,9 @@ export default function Profile() {
   const handleShowListing = async () => {
     try {
       setShowListingError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/user/listings/${currentUser._id}`
+      );
       const data = await res.json();
       if (data.success === false) {
         setShowListingError(true);
@@ -163,9 +173,12 @@ export default function Profile() {
   //////////HANDLE DELETE LISTING-------------
   const handleDeleteListing = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/listing/delete/${listingId}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (data.success === false) {
         console.log(data.message);

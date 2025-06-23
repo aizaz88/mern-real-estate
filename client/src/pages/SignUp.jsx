@@ -22,13 +22,16 @@ function SignUp() {
     try {
       console.log("Sending data:", formData); // Add this for debugging
 
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://mern-real-estate-backend-nine.vercel.app/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
 

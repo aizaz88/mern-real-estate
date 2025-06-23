@@ -31,7 +31,9 @@ export default function CreateListing() {
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId;
-      const res = await fetch(`/api/listing/get/${listingId}`);
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/listing/get/${listingId}`
+      );
       const data = await res.json();
       if (data.success === false) {
         console.log(data.message);
@@ -55,10 +57,13 @@ export default function CreateListing() {
       formData.append("upload_preset", uploadPreset);
       formData.append("cloud_name", cloudName);
 
-      fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: "POST",
-        body: formData,
-      })
+      fetch(
+        `https:/https://mern-real-estate-backend-nine.vercel.app/api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.secure_url) {
@@ -132,16 +137,19 @@ export default function CreateListing() {
       setLoading(true);
       setError(false);
 
-      const res = await fetch(`/api/listing/update/${params.listingId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          userRef: currentUser._id,
-        }),
-      });
+      const res = await fetch(
+        `https://mern-real-estate-backend-nine.vercel.app/api/listing/update/${params.listingId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            userRef: currentUser._id,
+          }),
+        }
+      );
 
       const data = await res.json();
       setLoading(false);

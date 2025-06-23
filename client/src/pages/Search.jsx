@@ -50,7 +50,9 @@ export default function Search() {
           order: orderFromUrl || "desc",
         });
 
-        const res = await fetch(`/api/listing/get?${urlParams.toString()}`);
+        const res = await fetch(
+          `https://mern-real-estate-backend-nine.vercel.app/api/listing/get?${urlParams.toString()}`
+        );
         const data = await res.json();
         setListings(data);
         setShowCount(9); // Reset when new search

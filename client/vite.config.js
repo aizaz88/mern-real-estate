@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   server: {
     proxy: {
-      "/api": {
+      "https://mern-real-estate-backend-nine.vercel.app/api": {
         target: "http://localhost:5000",
         secure: false,
       },
